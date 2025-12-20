@@ -1,0 +1,182 @@
+[gd_scene load_steps=9 format=3 uid="uid://dwvcg8upv8tq"]
+
+[ext_resource type="Script" uid="uid://cbq4q8eq62kwr" path="res://scripts/world.gd" id="1_sugp2"]
+[ext_resource type="Shader" uid="uid://q2dxpufhpav0" path="res://shaders/road.gdshader" id="2_jyhfs"]
+[ext_resource type="AudioStream" uid="uid://io47kuga43nj" path="res://assets/music/under_neon_skies.mp3" id="3_tbgi4"]
+[ext_resource type="Shader" path="res://shaders/ground.gdshader" id="4_groundval"]
+[ext_resource type="Shader" path="res://shaders/sun.gdshader" id="5_sun_shader"]
+
+[sub_resource type="Environment" id="Environment_1"]
+background_mode = 1
+background_color = Color(0.05, 0.05, 0.1, 1)
+glow_enabled = true
+glow_bloom = 0.5
+glow_blend_mode = 0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_road"]
+size = Vector2(12, 200)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_road"]
+render_priority = 0
+shader = ExtResource("2_jyhfs")
+shader_parameter/grid_color = Color(0, 1, 1, 1)
+shader_parameter/speed = 30.0
+shader_parameter/line_thickness = 0.02
+shader_parameter/scale = 10.0
+shader_parameter/energy = 0.0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_ground"]
+size = Vector2(200, 200)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ground"]
+render_priority = 0
+shader = ExtResource("4_groundval")
+shader_parameter/grid_color = Color(0.3, 0.0, 0.6, 1)
+shader_parameter/bg_color = Color(0.02, 0.02, 0.05, 1)
+shader_parameter/speed = 30.0
+shader_parameter/scale = 20.0
+
+[sub_resource type="QuadMesh" id="QuadMesh_sun"]
+size = Vector2(50, 50)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_sun"]
+render_priority = 0
+shader = ExtResource("5_sun_shader")
+shader_parameter/top_color = Color(1, 0.8, 0, 1)
+shader_parameter/bottom_color = Color(1, 0, 0.5, 1)
+shader_parameter/sun_radius = 0.45
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_star"]
+emission_shape = 3
+emission_box_extents = Vector3(80, 30, 80)
+direction = Vector3(0, 0, 1)
+spread = 10.0
+initial_velocity_min = 5.0
+initial_velocity_max = 15.0
+gravity = Vector3(0, 0, 0)
+color = Color(0, 1, 1, 0.8)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_star"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(1, 0.5, 1, 0.8)
+emission_enabled = true
+emission = Color(0, 1, 1, 1)
+emission_energy_multiplier = 2.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_star"]
+material = SubResource("StandardMaterial3D_star")
+radius = 0.1
+height = 0.2
+
+[node name="Main" type="Node3D"]
+script = ExtResource("1_sugp2")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_1")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, -0.75, 0.433013, 0, 10, 0)
+light_color = Color(0.2, 0.2, 0.4, 1)
+light_energy = 0.5
+
+[node name="Road" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -50)
+mesh = SubResource("PlaneMesh_road")
+surface_material_override/0 = SubResource("ShaderMaterial_road")
+
+[node name="Ground" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, -50)
+mesh = SubResource("PlaneMesh_ground")
+surface_material_override/0 = SubResource("ShaderMaterial_ground")
+
+[node name="Sun" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, -100)
+mesh = SubResource("QuadMesh_sun")
+surface_material_override/0 = SubResource("ShaderMaterial_sun")
+
+[node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_tbgi4")
+autoplay = true
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.906308, 0.422618, 0, -0.422618, 0.906308, 0, 4, 5)
+current = true
+
+[node name="Starfield" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 20, -50)
+amount = 200
+lifetime = 10.0
+visibility_aabb = AABB(-100, -50, -100, 200, 100, 200)
+local_coords = false
+process_material = SubResource("ParticleProcessMaterial_star")
+draw_pass_1 = SubResource("SphereMesh_star")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="ScoreLabel" type="Label" parent="CanvasLayer"]
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 166.0
+offset_bottom = 43.0
+text = "DISTANCE: 0 m"
+
+[node name="ScreenFlash" type="ColorRect" parent="CanvasLayer"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(1, 0.5, 0.8, 0.3)
+
+[node name="GameOverPanel" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer/GameOverPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.784314)
+
+[node name="Label" type="Label" parent="CanvasLayer/GameOverPanel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -60.0
+offset_right = 150.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 48
+text = "GAME OVER"
+horizontal_alignment = 1
+
+[node name="Button" type="Button" parent="CanvasLayer/GameOverPanel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -100.0
+offset_top = 20.0
+offset_right = 100.0
+offset_bottom = 80.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 32
+text = "RESTART"

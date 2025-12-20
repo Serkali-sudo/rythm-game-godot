@@ -1,0 +1,29 @@
+[gd_scene load_steps=4 format=3 uid="uid://s8q4f7f4f7f4"]
+
+[ext_resource type="Script" uid="uid://ebnairyrdqcf" path="res://scripts/spike.gd" id="1_ljd5v"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1"]
+albedo_color = Color(0.8, 0, 1, 1)
+emission_enabled = true
+emission = Color(0.6, 0, 0.8, 1)
+emission_energy_multiplier = 3.0
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_1"]
+material = SubResource("StandardMaterial3D_1")
+top_radius = 0.0
+height = 1.0
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_spike"]
+height = 1.0
+radius = 0.5
+
+[node name="Spike" type="Area3D"]
+script = ExtResource("1_ljd5v")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+mesh = SubResource("CylinderMesh_1")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("CylinderShape3D_spike")
