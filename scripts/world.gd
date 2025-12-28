@@ -16,6 +16,7 @@ var spike_interval = 0.8
 var player_ref = null
 var distance = 0.0
 var is_game_over = false
+var cached_energy = 0.0
 
 @onready var score_label = $CanvasLayer/ScoreLabel
 @onready var road = $Road
@@ -70,11 +71,13 @@ func _process(delta):
 		spawn_building()
 		spawn_timer = spawn_interval
 		
+	# Update cached energy once per frame for all objects to use
+	cached_energy = get_energy()
+	
 	# Update Road Energy
-	var energy = get_energy()
 	var road_mat = road.get_active_material(0) as ShaderMaterial
 	if road_mat:
-		road_mat.set_shader_parameter("energy", energy)
+		road_mat.set_shader_parameter("energy", cached_energy)
 		
 	spike_timer -= delta
 	if spike_timer <= 0:
@@ -87,8 +90,8 @@ func _process(delta):
 	score_label.text = "DISTANCE: %d m" % int(distance / 10.0)
 	
 	# Camera Shake on bass
-	if energy > 0.5:
-		shake_intensity = energy * 0.3
+	if cached_energy > 0.5:
+		shake_intensity = cached_energy * 0.3
 	else:
 		shake_intensity = lerp(shake_intensity, 0.0, 10.0 * delta)
 	
@@ -103,9 +106,9 @@ func _process(delta):
 	
 	# Screen Flash on high energy
 	if screen_flash:
-		if energy > 0.7:
+		if cached_energy > 0.7:
 			screen_flash.visible = true
-			screen_flash.modulate.a = (energy - 0.7) * 2.0
+			screen_flash.modulate.a = (cached_energy - 0.7) * 2.0
 		else:
 			screen_flash.visible = false
 

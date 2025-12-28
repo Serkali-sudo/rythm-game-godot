@@ -15,6 +15,10 @@ run/main_scene="res://scenes/main_menu.tscn"
 config/features=PackedStringArray("4.5", "Mobile")
 config/icon="res://icon.svg"
 
+[autoload]
+
+GameData="*res://scripts/game_data.gd"
+
 [input]
 
 move_left={
@@ -33,10 +37,11 @@ jump={
 ]
 }
 
-[autoload]
+[input_devices]
 
-GameData="*res://scripts/game_data.gd"
+pointing/emulate_touch_from_mouse=true
 
 [rendering]
 
 renderer/rendering_method="mobile"
+textures/vram_compression/import_etc2_astc=true

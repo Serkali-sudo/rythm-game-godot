@@ -20,6 +20,9 @@ func find_wheels(node):
 	for child in node.get_children():
 		find_wheels(child)
 
+var touch_start_pos = Vector2.ZERO
+var min_swipe_distance = 50.0
+
 func _input(event):
 	if event.is_action_pressed("move_left"):
 		change_lane(-1)
@@ -27,6 +30,35 @@ func _input(event):
 		change_lane(1)
 	elif event.is_action_pressed("jump") and not is_jumping:
 		jump()
+		
+	# Swipe Controls
+	if event is InputEventScreenTouch:
+		if event.pressed:
+			touch_start_pos = event.position
+			
+	elif event is InputEventScreenDrag:
+		if touch_start_pos == Vector2.ZERO:
+			# Ignore drags if we didn't catch the start (or already processed it)
+			return
+			
+		var drag_vector = event.position - touch_start_pos
+		
+		# Check if swipe is long enough
+		if drag_vector.length() > min_swipe_distance:
+			if abs(drag_vector.x) > abs(drag_vector.y):
+				# Horizontal Swipe
+				if drag_vector.x > 0:
+					change_lane(1)
+				else:
+					change_lane(-1)
+			else:
+				# Vertical Swipe
+				if drag_vector.y < 0: # Up
+					if not is_jumping:
+						jump()
+			
+			# Reset start pos so we don't trigger multiple times for one swipe
+			touch_start_pos = Vector2.ZERO
 
 func change_lane(dir):
 	current_lane += dir
@@ -53,12 +85,12 @@ func _process(delta):
 	for wheel in wheels:
 		wheel.rotate_x(speed * delta * 0.5)
 
-	# Sync Trail Color with Music
+	# Sync Trail Color with Music - use cached energy
 	var parent = get_parent()
-	if parent.has_method("get_energy"):
-		var energy = parent.get_energy() 
-		# Color Shift: Cyan -> Pink/Red
-		var target_color = Color(0.0, 1.0, 1.0).lerp(Color(1.0, 0.0, 0.5), energy * 2.0)
+	if parent and "cached_energy" in parent:
+		var energy = parent.cached_energy
+		# Color Shift: Hot Pink -> Bright White/Pink
+		var target_color = Color(1, 0.41, 0.71).lerp(Color(1.0, 0.8, 1.0), energy * 2.0)
 		
 		# Update Material (Shared by both trails)
 		var trail_mesh = $TrailLeft.draw_pass_1

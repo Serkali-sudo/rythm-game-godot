@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://e8q4f7f4f7f4"]
+[gd_scene load_steps=9 format=3 uid="uid://e8q4f7f4f7f4"]
 
 [ext_resource type="Script" uid="uid://bdwe7eb7ud0ru" path="res://scripts/player.gd" id="1_3vyb7"]
 [ext_resource type="PackedScene" uid="uid://c3ubi50hcgggd" path="res://assets/models/car/neon_car.glb" id="2_model"]
@@ -18,15 +18,15 @@ spread = 0.0
 initial_velocity_min = 30.0
 initial_velocity_max = 30.0
 gravity = Vector3(0, 0, 0)
-color = Color(0, 1, 1, 1)
+color = Color(1, 0.41, 0.71, 1)
 color_ramp = SubResource("GradientTexture1D_trail")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_trail"]
 transparency = 1
 vertex_color_use_as_albedo = true
-albedo_color = Color(0, 1, 1, 0.5)
+albedo_color = Color(1, 0.41, 0.71, 0.5)
 emission_enabled = true
-emission = Color(0, 1, 1, 1)
+emission = Color(1, 0.41, 0.71, 1)
 emission_energy_multiplier = 3.0
 
 [sub_resource type="BoxMesh" id="BoxMesh_trail"]
@@ -52,27 +52,27 @@ omni_range = 10.0
 
 [node name="TrailLeft" type="GPUParticles3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.7357055, 0.1, 1)
-amount = 100
-lifetime = 2.0
+amount = 30
+lifetime = 0.3
 process_material = SubResource("ParticleProcessMaterial_trail")
 draw_pass_1 = SubResource("BoxMesh_trail")
 
 [node name="TrailRight" type="GPUParticles3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.74739087, 0.1, 1)
-amount = 100
-lifetime = 2.0
+amount = 30
+lifetime = 0.3
 process_material = SubResource("ParticleProcessMaterial_trail")
 draw_pass_1 = SubResource("BoxMesh_trail")
 
 [node name="HeadlightLeft" type="SpotLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.866025, -0.5, 0, 0.5, 0.866025, -0.5, 0.3, -1.5)
+transform = Transform3D(1, 0, 0, 0, 0.9955916, -0.093795806, 0, 0.093795806, 0.9955916, -0.5, 0.3, -1.5)
 light_color = Color(0, 1, 1, 1)
 light_energy = 3.0
 spot_range = 30.0
 spot_angle = 25.0
 
 [node name="HeadlightRight" type="SpotLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.866025, -0.5, 0, 0.5, 0.866025, 0.5, 0.3, -1.5)
+transform = Transform3D(1, 0, 0, 0, 0.9999981, -0.0020073354, 0, 0.0020073354, 0.9999981, 0.5, 0.3, -1.5)
 light_color = Color(0, 1, 1, 1)
 light_energy = 3.0
 spot_range = 30.0

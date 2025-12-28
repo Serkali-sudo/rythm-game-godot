@@ -4,8 +4,9 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://ulutxxcu7cld"
 path.s3tc="res://.godot/imported/neon_car_8.png-bd6fd5bc77850a0c0fe594f8d846f448.s3tc.ctex"
+path.etc2="res://.godot/imported/neon_car_8.png-bd6fd5bc77850a0c0fe594f8d846f448.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -15,7 +16,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/car/neon_car_8.png"
-dest_files=["res://.godot/imported/neon_car_8.png-bd6fd5bc77850a0c0fe594f8d846f448.s3tc.ctex"]
+dest_files=["res://.godot/imported/neon_car_8.png-bd6fd5bc77850a0c0fe594f8d846f448.s3tc.ctex", "res://.godot/imported/neon_car_8.png-bd6fd5bc77850a0c0fe594f8d846f448.etc2.ctex"]
 
 [params]
 

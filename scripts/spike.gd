@@ -9,8 +9,8 @@ func _process(delta):
 	if world_ref:
 		position.z += world_ref.speed * delta
 		
-		# Spikes pulse and change color to music
-		var energy = world_ref.get_energy()
+		# Spikes pulse and change color to music - use cached energy
+		var energy = world_ref.cached_energy
 		scale = Vector3.ONE * (1.0 + energy * 1.5)
 		
 		# Bob up and down with music
