@@ -33,6 +33,28 @@ emission_energy_multiplier = 3.0
 material = SubResource("StandardMaterial3D_trail")
 size = Vector3(0.2, 0.1, 0.5)
 
+[sub_resource type="Gradient" id="Gradient_lane"]
+colors = PackedColorArray(0, 1, 1, 1, 0, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_lane"]
+gradient = SubResource("Gradient_lane")
+fill_from = Vector2(0.5, 1)
+fill_to = Vector2(0.5, 0)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lane"]
+transparency = 1
+blend_mode = 1
+albedo_color = Color(0, 1, 1, 1)
+albedo_texture = SubResource("GradientTexture2D_lane")
+emission_enabled = true
+emission = Color(0, 1, 1, 1)
+emission_energy_multiplier = 5.0
+emission_texture = SubResource("GradientTexture2D_lane")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_lane"]
+material = SubResource("StandardMaterial3D_lane")
+size = Vector2(2.5, 50)
+
 [node name="Player" type="CharacterBody3D"]
 script = ExtResource("1_3vyb7")
 
@@ -43,12 +65,10 @@ transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 shape = SubResource("BoxShape3D_player")
 
-[node name="JumpFlash" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0.5)
+[node name="LaneFlash" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 25)
 visible = false
-light_color = Color(0.1, 1, 1, 1)
-light_energy = 5.0
-omni_range = 10.0
+mesh = SubResource("PlaneMesh_lane")
 
 [node name="TrailLeft" type="GPUParticles3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.7357055, 0.1, 1)

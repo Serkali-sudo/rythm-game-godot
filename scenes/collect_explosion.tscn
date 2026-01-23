@@ -1,0 +1,36 @@
+[gd_scene load_steps=6 format=3 uid="uid://c8j5k3l2m1n0"]
+
+[ext_resource type="Script" path="res://scripts/explosion.gd" id="1_expl"]
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_collect"]
+emission_shape = 1
+emission_sphere_radius = 0.5
+direction = Vector3(0, 1, 0)
+spread = 180.0
+initial_velocity_min = 2.0
+initial_velocity_max = 5.0
+gravity = Vector3(0, 3, 0)
+damping_min = 1.0
+damping_max = 2.0
+scale_min = 0.5
+scale_max = 1.2
+color = Color(0, 1, 1, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_collect"]
+transparency = 1
+blend_mode = 1
+shading_mode = 0
+albedo_color = Color(0, 1, 1, 0.8)
+
+[sub_resource type="BoxMesh" id="BoxMesh_collect"]
+material = SubResource("StandardMaterial3D_collect")
+size = Vector3(0.15, 0.15, 0.15)
+
+[node name="CollectExplosion" type="GPUParticles3D"]
+emitting = false
+amount = 25
+one_shot = true
+explosiveness = 1.0
+process_material = SubResource("ParticleProcessMaterial_collect")
+draw_pass_1 = SubResource("BoxMesh_collect")
+script = ExtResource("1_expl")

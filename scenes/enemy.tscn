@@ -1,12 +1,11 @@
-[gd_scene load_steps=4 format=3 uid="uid://f8q4f7f4f7f4"]
+[gd_scene load_steps=4 format=3 uid="uid://4oepybwcjst6"]
 
 [ext_resource type="Script" uid="uid://ixuxxam8tnxk" path="res://scripts/enemy.gd" id="1_enemy"]
-
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_enemy"]
 albedo_color = Color(0.2, 0, 0.5, 1)
 emission_enabled = true
-emission = Color(0.4, 0, 1.0, 1)
+emission = Color(0.4, 0, 1, 1)
 emission_energy_multiplier = 3.0
 
 [sub_resource type="BoxMesh" id="BoxMesh_enemy"]

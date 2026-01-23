@@ -3,7 +3,7 @@ extends CharacterBody3D
 var current_lane = 1 # 0: Left, 1: Center, 2: Right
 var lanes = [-3.0, 0.0, 3.0]
 var target_x = 0.0
-var is_jumping = false
+# var is_jumping = false # Removed Jump
 
 @onready var mesh = $CarModel
 var wheels = []
@@ -28,8 +28,11 @@ func _input(event):
 		change_lane(-1)
 	elif event.is_action_pressed("move_right"):
 		change_lane(1)
-	elif event.is_action_pressed("jump") and not is_jumping:
-		jump()
+	elif event.is_action_pressed("move_down"):
+		trigger_manual_boost()
+	# Removed Jump Input
+	# elif event.is_action_pressed("jump") and not is_jumping:
+	# 	jump()
 		
 	# Swipe Controls
 	if event is InputEventScreenTouch:
@@ -53,9 +56,12 @@ func _input(event):
 					change_lane(-1)
 			else:
 				# Vertical Swipe
-				if drag_vector.y < 0: # Up
-					if not is_jumping:
-						jump()
+				if drag_vector.y > 0: # Down
+					trigger_manual_boost()
+				# Removed Jump (Swipe Up)
+				# if drag_vector.y < 0: # Up
+				# 	if not is_jumping:
+				# 		jump()
 			
 			# Reset start pos so we don't trigger multiple times for one swipe
 			touch_start_pos = Vector2.ZERO
@@ -65,16 +71,61 @@ func change_lane(dir):
 	current_lane = clamp(current_lane, 0, 2)
 	target_x = lanes[current_lane]
 
-func jump():
-	is_jumping = true
-	$JumpFlash.visible = true
-	var tween = create_tween()
-	tween.tween_property(mesh, "position:y", 3.0, 0.3).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
-	tween.tween_property(mesh, "position:y", 0.0, 0.4).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
-	tween.tween_callback(func(): 
-		is_jumping = false
-		$JumpFlash.visible = false
-	)
+func trigger_manual_boost():
+	var parent = get_parent()
+	var can_boost = false
+	
+	if parent and "boost_charges" in parent:
+		if parent.boost_charges > 0:
+			can_boost = true
+			
+	if can_boost:
+		# Flash effect (SUCCESS)
+		var flash = $LaneFlash
+		flash.visible = true
+		var mat = flash.mesh.material as StandardMaterial3D
+		
+		# Pulse opacity and emission
+		mat.albedo_color = Color(0.0, 1.0, 1.0, 0.8) # Cyan for boost
+		mat.albedo_color.a = 0.8
+		mat.emission = Color(0.0, 1.0, 1.0)
+		mat.emission_energy_multiplier = 10.0
+		
+		var tween = create_tween()
+		tween.set_parallel(true)
+		tween.tween_property(mat, "albedo_color:a", 0.0, 0.5).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+		tween.tween_property(mat, "emission_energy_multiplier", 0.0, 0.5)
+		tween.chain().tween_callback(func(): flash.visible = false)
+		
+		# Trigger Speed Boost
+		if parent and parent.has_method("activate_speed_boost"):
+			parent.activate_speed_boost()
+	else:
+		# Flash RED for failure/no charges
+		var flash = $LaneFlash
+		flash.visible = true
+		var mat = flash.mesh.material as StandardMaterial3D
+		
+		mat.albedo_color = Color(1.0, 0.0, 0.0, 0.5) # Red
+		mat.emission = Color(1.0, 0.0, 0.0)
+		mat.emission_energy_multiplier = 5.0
+		
+		var tween = create_tween()
+		tween.set_parallel(true)
+		tween.tween_property(mat, "albedo_color:a", 0.0, 0.3)
+		tween.tween_property(mat, "emission_energy_multiplier", 0.0, 0.3)
+		tween.chain().tween_callback(func(): flash.visible = false)
+
+# func jump():
+# 	is_jumping = true
+# 	$JumpFlash.visible = true
+# 	var tween = create_tween()
+# 	tween.tween_property(mesh, "position:y", 3.0, 0.3).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+# 	tween.tween_property(mesh, "position:y", 0.0, 0.4).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+# 	tween.tween_callback(func(): 
+# 		is_jumping = false
+# 		$JumpFlash.visible = false
+# 	)
 
 func _process(delta):
 	# Smooth lane switching
