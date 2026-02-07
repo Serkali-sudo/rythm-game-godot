@@ -57,5 +57,6 @@ void fragment() {
 	vec3 final_emission = (is_line * lane_color) + (is_wave * wave_color * 2.0);
 	
 	EMISSION = final_emission; 
-	ROUGHNESS = 0.8;
+	ROUGHNESS = 0.1;
+	METALLIC = 0.6;
 }

@@ -1,17 +1,20 @@
-[gd_scene load_steps=9 format=3 uid="uid://dwvcg8upv8tq"]
+[gd_scene format=3 uid="uid://dwvcg8upv8tq"]
 
-[ext_resource type="Script" uid="uid://cbq4q8eq62kwr" path="res://scripts/world.gd" id="1_sugp2"]
+[ext_resource type="Script" uid="uid://dln4y46brphxp" path="res://scripts/world.gd" id="1_sugp2"]
 [ext_resource type="Shader" uid="uid://q2dxpufhpav0" path="res://shaders/road.gdshader" id="2_jyhfs"]
 [ext_resource type="AudioStream" uid="uid://io47kuga43nj" path="res://assets/music/under_neon_skies.mp3" id="3_tbgi4"]
-[ext_resource type="Shader" path="res://shaders/ground.gdshader" id="4_groundval"]
-[ext_resource type="Shader" path="res://shaders/sun.gdshader" id="5_sun_shader"]
+[ext_resource type="Shader" uid="uid://cqk8w31tj4ut6" path="res://shaders/ground.gdshader" id="4_groundval"]
+[ext_resource type="Shader" uid="uid://yhx45xp8q2tr" path="res://shaders/sun.gdshader" id="5_sun_shader"]
 
 [sub_resource type="Environment" id="Environment_1"]
 background_mode = 1
 background_color = Color(0.05, 0.05, 0.1, 1)
+ssr_enabled = true
+ssr_max_steps = 128
+ssr_fade_in = 0.1
+ssr_fade_out = 0.5
 glow_enabled = true
 glow_bloom = 0.5
-glow_blend_mode = 0
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_road"]
 size = Vector2(12, 200)
@@ -31,7 +34,7 @@ size = Vector2(200, 200)
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ground"]
 render_priority = 0
 shader = ExtResource("4_groundval")
-shader_parameter/grid_color = Color(0.3, 0.0, 0.6, 1)
+shader_parameter/grid_color = Color(0.3, 0, 0.6, 1)
 shader_parameter/bg_color = Color(0.02, 0.02, 0.05, 1)
 shader_parameter/speed = 30.0
 shader_parameter/scale = 20.0
@@ -60,68 +63,64 @@ color = Color(0, 1, 1, 0.8)
 transparency = 1
 shading_mode = 0
 albedo_color = Color(1, 0.5, 1, 0.8)
-emission_enabled = true
-emission = Color(0, 1, 1, 1)
-emission_energy_multiplier = 2.0
 
 [sub_resource type="SphereMesh" id="SphereMesh_star"]
 material = SubResource("StandardMaterial3D_star")
 radius = 0.1
 height = 0.2
 
-[node name="Main" type="Node3D"]
+[node name="Main" type="Node3D" unique_id=994918883]
 script = ExtResource("1_sugp2")
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=540044877]
 environment = SubResource("Environment_1")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1355540024]
 transform = Transform3D(0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, -0.75, 0.433013, 0, 10, 0)
 light_color = Color(0.2, 0.2, 0.4, 1)
 light_energy = 0.5
 
-[node name="Road" type="MeshInstance3D" parent="."]
+[node name="Road" type="MeshInstance3D" parent="." unique_id=622896456]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -50)
 mesh = SubResource("PlaneMesh_road")
 surface_material_override/0 = SubResource("ShaderMaterial_road")
 
-[node name="Ground" type="MeshInstance3D" parent="."]
+[node name="Ground" type="MeshInstance3D" parent="." unique_id=1097714087]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, -50)
 mesh = SubResource("PlaneMesh_ground")
 surface_material_override/0 = SubResource("ShaderMaterial_ground")
 
-[node name="Sun" type="MeshInstance3D" parent="."]
+[node name="Sun" type="MeshInstance3D" parent="." unique_id=1074769693]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, -100)
 mesh = SubResource("QuadMesh_sun")
 surface_material_override/0 = SubResource("ShaderMaterial_sun")
 
-[node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
+[node name="MusicPlayer" type="AudioStreamPlayer" parent="." unique_id=1498035463]
 stream = ExtResource("3_tbgi4")
 autoplay = true
 
-[node name="Camera3D" type="Camera3D" parent="."]
+[node name="Camera3D" type="Camera3D" parent="." unique_id=789299343]
 transform = Transform3D(1, 0, 0, 0, 0.906308, 0.422618, 0, -0.422618, 0.906308, 0, 5, 9)
 current = true
 
-[node name="Starfield" type="GPUParticles3D" parent="."]
+[node name="Starfield" type="GPUParticles3D" parent="." unique_id=1993052352]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 20, -50)
 amount = 80
 lifetime = 10.0
 visibility_aabb = AABB(-100, -50, -100, 200, 100, 200)
-local_coords = false
 process_material = SubResource("ParticleProcessMaterial_star")
 draw_pass_1 = SubResource("SphereMesh_star")
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1942590168]
 
-[node name="ScoreLabel" type="Label" parent="CanvasLayer"]
+[node name="ScoreLabel" type="Label" parent="CanvasLayer" unique_id=1239197558]
 offset_left = 20.0
 offset_top = 20.0
 offset_right = 166.0
 offset_bottom = 43.0
 text = "DISTANCE: 0 m"
 
-[node name="BoostLabel" type="Label" parent="CanvasLayer"]
+[node name="BoostLabel" type="Label" parent="CanvasLayer" unique_id=1242188420]
 offset_left = 20.0
 offset_top = 50.0
 offset_right = 200.0
@@ -130,9 +129,8 @@ theme_override_colors/font_color = Color(0, 1, 1, 1)
 theme_override_font_sizes/font_size = 20
 text = "BOOST: 0"
 
-[node name="ScreenFlash" type="ColorRect" parent="CanvasLayer"]
+[node name="ScreenFlash" type="ColorRect" parent="CanvasLayer" unique_id=1825898656]
 visible = false
-layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -140,7 +138,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(1, 0.5, 0.8, 0.3)
 
-[node name="GameOverPanel" type="Control" parent="CanvasLayer"]
+[node name="GameOverPanel" type="Control" parent="CanvasLayer" unique_id=514016021]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -148,7 +146,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="ColorRect" type="ColorRect" parent="CanvasLayer/GameOverPanel"]
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer/GameOverPanel" unique_id=768091226]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -157,7 +155,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.784314)
 
-[node name="Label" type="Label" parent="CanvasLayer/GameOverPanel"]
+[node name="Label" type="Label" parent="CanvasLayer/GameOverPanel" unique_id=756408085]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -174,7 +172,7 @@ theme_override_font_sizes/font_size = 48
 text = "GAME OVER"
 horizontal_alignment = 1
 
-[node name="Button" type="Button" parent="CanvasLayer/GameOverPanel"]
+[node name="Button" type="Button" parent="CanvasLayer/GameOverPanel" unique_id=56576071]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5

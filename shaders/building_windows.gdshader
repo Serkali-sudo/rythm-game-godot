@@ -35,4 +35,6 @@ void fragment() {
 	// Highlight the actual corners of the mesh
 	float rim = 1.0 - (step(0.02, UV.x) * step(0.02, 1.0 - UV.x) * step(0.02, UV.y));
 	EMISSION += final_color * rim * 2.0; // Strong edge glow
+	ROUGHNESS = is_window > 0.5 ? 0.05 : 0.8;
+	METALLIC = is_window > 0.5 ? 0.8 : 0.0;
 }
